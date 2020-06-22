@@ -6,6 +6,16 @@ class AwsAnalytics {
   static const MethodChannel _channel =
       const MethodChannel('aws_analytics');
 
+  static Future<bool> initialize() async {
+    try {
+      bool result = await _channel.invokeMethod("initialize");
+      return result;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   static Future<void> registerGlobalProperties(Map<String,dynamic> properties) async {
     try {
       _channel.invokeMethod("registerGlobalProperties", properties);

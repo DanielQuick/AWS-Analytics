@@ -5,15 +5,6 @@ import AmplifyPlugins
 
 public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    do {
-        try Amplify.add(plugin: AWSCognitoAuthPlugin())
-        try Amplify.add(plugin: AWSPinpointAnalyticsPlugin())
-        try Amplify.configure()
-        print("Amplify configured with Auth and Analytics plugins")
-    } catch {
-        print("Failed to initialize Amplify with \(error)")
-    }
-
     let channel = FlutterMethodChannel(name: "aws_analytics", binaryMessenger: registrar.messenger())
     let instance = SwiftAwsAnalyticsPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
@@ -21,6 +12,9 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch (call.method) {
+      case "initialize":
+        initialize(result: result)
+        break
       case "registerGlobalProperties":
         registerGlobalProperties(properties: (call.arguments as! AnalyticsProperties), result: result)
         break
@@ -32,6 +26,19 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
         record(eventName: (arguments["event"] as! String), properties: (arguments["properties"] as! AnalyticsProperties), result: result)
         break
       default: result(FlutterMethodNotImplemented)
+    }
+  }
+
+  func initialize(result: FlutterResult) {
+    do {
+        try Amplify.add(plugin: AWSCognitoAuthPlugin())
+        try Amplify.add(plugin: AWSPinpointAnalyticsPlugin())
+        try Amplify.configure()
+        print("Amplify configured with Auth and Analytics plugins")
+        result(true)
+    } catch {
+        print("Failed to initialize Amplify with \(error)")
+        result(false)
     }
   }
 
