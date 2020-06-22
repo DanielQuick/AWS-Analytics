@@ -22,20 +22,21 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch (call.method) {
       case "registerGlobalProperties":
-        registerGlobalProperties(properties: call.arguments, result: result)
+        registerGlobalProperties(properties: call.arguments as! Dictionary<String,Any>, result: result)
         break
       case "unregisterGlobalProperties":
-        unregisterGlobalProperties(properties: call.arguments, result: result)
+        unregisterGlobalProperties(properties: call.arguments as! Array<String>, result: result)
         break
       case "record":
-        record(eventName: call.arguments["event"], properties: call.arguments["properties"], result: result)
+        let arguments = call.arguments as! Dictionary<String,Any>
+        record(eventName: arguments["event"], properties: arguments["properties"], result: result)
         break
       default: result(FlutterMethodNotImplemented)
     }
   }
 
   func registerGlobalProperties(properties: Dictionary<String,Any>, result: FlutterResult) {
-    let globalProperties: AnalyticsProperties = [:];
+    var globalProperties: AnalyticsProperties = [:];
     for (key, value) in properties {
       globalProperties[key] = value
     }
@@ -53,7 +54,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
   }
 
   func record(eventName: String, properties: Dictionary<String,Any>, result: FlutterResult) {
-     let analyticsProperties: AnalyticsProperties = [:];
+    var analyticsProperties: AnalyticsProperties = [:];
     for (key, value) in properties {
       analyticsProperties[key] = value
     }
