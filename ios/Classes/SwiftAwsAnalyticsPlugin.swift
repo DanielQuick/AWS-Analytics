@@ -25,28 +25,26 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
         registerGlobalProperties(properties: call.arguments as! Dictionary<String,Any>, result: result)
         break
       case "unregisterGlobalProperties":
-        unregisterGlobalProperties(properties: call.arguments as! Array<String>, result: result)
+        unregisterGlobalProperties(properties: (call.arguments as? Array<String>), result: result)
         break
       case "record":
         let arguments = call.arguments as! Dictionary<String,Any>
-        record(eventName: arguments["event"], properties: arguments["properties"], result: result)
+        record(eventName: (arguments["event"] as! String), properties: arguments["properties"], result: result)
         break
       default: result(FlutterMethodNotImplemented)
     }
   }
 
   func registerGlobalProperties(properties: Dictionary<String,Any>, result: FlutterResult) {
-    var globalProperties: AnalyticsProperties = [:];
-    for (key, value) in properties {
-      globalProperties[key] = value
-    }
+    var globalProperties: AnalyticsProperties = properties as [String: AnalyticsPropertyValue]
     Amplify.Analytics.registerGlobalProperties(globalProperties)
     result(true)
   }
 
   func unregisterGlobalProperties(properties: Array<String>?, result: FlutterResult) {
     if let properties = properties {
-      Amplify.Analytics.unregisterGlobalProperties(properties)
+      let objectSet = Set(properties.map { $0 })
+      Amplify.Analytics.unregisterGlobalProperties(objectSet)
     } else {
       Amplify.Analytics.unregisterGlobalProperties()
     }
@@ -54,10 +52,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
   }
 
   func record(eventName: String, properties: Dictionary<String,Any>, result: FlutterResult) {
-    var analyticsProperties: AnalyticsProperties = [:];
-    for (key, value) in properties {
-      analyticsProperties[key] = value
-    }
+    var analyticsProperties: AnalyticsProperties = properties as [String: AnalyticsPropertyValue]
     let event = BasicAnalyticsEvent(name: eventName, properties: analyticsProperties)
     Amplify.Analytics.record(event: event)
     result(true)
