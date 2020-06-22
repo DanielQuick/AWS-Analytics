@@ -29,17 +29,17 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
         break
       case "record":
         let arguments = call.arguments as! Dictionary<String,Any>
-        record(eventName: (arguments["event"] as! String), properties: (arguments["properties"] as! Dictionary<String,Any>), result: result)
+        record(eventName: (arguments["event"] as! String), properties: (arguments["properties"] as! AnalyticsProperties), result: result)
         break
       default: result(FlutterMethodNotImplemented)
     }
   }
 
   func registerGlobalProperties(properties: Dictionary<String,Any>, result: FlutterResult) {
-    var globalProperties: AnalyticsProperties = [:]
-    for (key, value) in properties {
-      globalProperties[key] = value
-    }
+    let globalProperties : AnalyticsProperties = ["userPropertyStringKey": "userProperyStringValue",
+                          "userPropertyIntKey": 123,
+                          "userPropertyDoubleKey": 12.34,
+                          "userPropertyBoolKey": true] as [String: AnalyticsPropertyValue]
     Amplify.Analytics.registerGlobalProperties(globalProperties)
     result(true)
   }
@@ -54,13 +54,8 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     result(true)
   }
 
-  func record(eventName: String, properties: Dictionary<String,Any>, result: FlutterResult) {
-    // var analyticsProperties: AnalyticsProperties = [:]
-    // for (key, value) in properties {
-    //   analyticsProperties[key] = value.AnalyticsPropertyValue
-    // }
-    let analyticsProperties = properties as [String: AnalyticsPropertyValue]
-    let event = BasicAnalyticsEvent(name: eventName, properties: analyticsProperties)
+  func record(eventName: String, properties: AnalyticsProperties, result: FlutterResult) {
+    let event = BasicAnalyticsEvent(name: eventName, properties: properties)
     Amplify.Analytics.record(event: event)
     result(true)
   }
