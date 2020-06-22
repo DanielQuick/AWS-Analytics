@@ -59,10 +59,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     // for (key, value) in properties {
     //   analyticsProperties[key] = value.AnalyticsPropertyValue
     // }
-    let analyticsProperties = ["userPropertyStringKey": "userProperyStringValue",
-                          "userPropertyIntKey": 123,
-                          "userPropertyDoubleKey": 12.34,
-                          "userPropertyBoolKey": true] as [String: AnalyticsPropertyValue]
+    let analyticsProperties = properties as [String: AnalyticsPropertyValue]
     let event = BasicAnalyticsEvent(name: eventName, properties: analyticsProperties)
     Amplify.Analytics.record(event: event)
     result(true)
