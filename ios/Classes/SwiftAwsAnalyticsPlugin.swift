@@ -34,8 +34,8 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     }
   }
 
-  func registerGlobalProperties(properties: Dictionary, result: FlutterResult) {
-    let globalProperties: AnalyticsProperties = [];
+  func registerGlobalProperties(properties: Dictionary<String,Any>, result: FlutterResult) {
+    let globalProperties: AnalyticsProperties = [:];
     for (key, value) in properties {
       globalProperties[key] = value
     }
@@ -43,7 +43,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     result(true)
   }
 
-  func unregisterGlobalProperties(properties: Array?, result: FlutterResult) {
+  func unregisterGlobalProperties(properties: Array<String>?, result: FlutterResult) {
     if let properties = properties {
       Amplify.Analytics.unregisterGlobalProperties(properties)
     } else {
@@ -52,8 +52,8 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     result(true)
   }
 
-  func record(eventName: String, properties: Dictionary, result: FlutterResult) {
-     let analyticsProperties: AnalyticsProperties = [];
+  func record(eventName: String, properties: Dictionary<String,Any>, result: FlutterResult) {
+     let analyticsProperties: AnalyticsProperties = [:];
     for (key, value) in properties {
       analyticsProperties[key] = value
     }
