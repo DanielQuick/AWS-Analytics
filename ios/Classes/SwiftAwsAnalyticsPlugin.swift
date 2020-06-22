@@ -22,7 +22,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch (call.method) {
       case "registerGlobalProperties":
-        registerGlobalProperties(properties: call.arguments as! Dictionary<String,Any>, result: result)
+        registerGlobalProperties(properties: (call.arguments as! AnalyticsProperties), result: result)
         break
       case "unregisterGlobalProperties":
         unregisterGlobalProperties(properties: (call.arguments as? Array<String>), result: result)
@@ -35,12 +35,8 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     }
   }
 
-  func registerGlobalProperties(properties: Dictionary<String,Any>, result: FlutterResult) {
-    let globalProperties : AnalyticsProperties = ["userPropertyStringKey": "userProperyStringValue",
-                          "userPropertyIntKey": 123,
-                          "userPropertyDoubleKey": 12.34,
-                          "userPropertyBoolKey": true] as [String: AnalyticsPropertyValue]
-    Amplify.Analytics.registerGlobalProperties(globalProperties)
+  func registerGlobalProperties(properties: AnalyticsProperties, result: FlutterResult) {
+    Amplify.Analytics.registerGlobalProperties(properties)
     result(true)
   }
 
