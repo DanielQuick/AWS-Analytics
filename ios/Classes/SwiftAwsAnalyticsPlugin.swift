@@ -59,7 +59,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     // for (key, value) in properties {
     //   analyticsProperties[key] = value.AnalyticsPropertyValue
     // }
-    let properties = ["userPropertyStringKey": "userProperyStringValue",
+    let analyticsProperties = ["userPropertyStringKey": "userProperyStringValue",
                           "userPropertyIntKey": 123,
                           "userPropertyDoubleKey": 12.34,
                           "userPropertyBoolKey": true] as [String: AnalyticsPropertyValue]
