@@ -16,7 +16,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
         initialize(result: result)
         break
       case "registerGlobalProperties":
-      let arguments = call.arguments as! [String,Any]
+      let arguments = call.arguments as! [String:Any]
         registerGlobalProperties(properties: arguments, result: result)
         break
       case "unregisterGlobalProperties":
@@ -24,7 +24,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
         break
       case "record":
         let arguments = call.arguments as! Dictionary<String,Any>
-        record(eventName: (arguments["event"] as! String), properties: (arguments["properties"] as! [String,Any]), result: result)
+        record(eventName: (arguments["event"] as! String), properties: (arguments["properties"] as! [String:Any]), result: result)
         break
       default: result(FlutterMethodNotImplemented)
     }
@@ -43,7 +43,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     }
   }
 
-  func registerGlobalProperties(properties: [String,Any], result: FlutterResult) {
+  func registerGlobalProperties(properties: [String:Any], result: FlutterResult) {
     Amplify.Analytics.registerGlobalProperties(properties as [String: AnalyticsPropertyValue])
     result(true)
   }
@@ -58,7 +58,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     result(true)
   }
 
-  func record(eventName: String, properties: [String,Any], result: FlutterResult) {
+  func record(eventName: String, properties: [String:Any], result: FlutterResult) {
     let event = BasicAnalyticsEvent(name: eventName, properties: properties as [String: AnalyticsPropertyValue])
     Amplify.Analytics.record(event: event)
     result(true)
