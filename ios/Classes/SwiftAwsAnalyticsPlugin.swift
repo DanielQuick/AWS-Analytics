@@ -16,14 +16,14 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
         initialize(result: result)
         break
       case "registerGlobalProperties":
-        registerGlobalProperties(properties: (call.arguments as! AnalyticsProperties), result: result)
+        registerGlobalProperties(properties: (call.arguments as AnyObject as! AnalyticsProperties), result: result)
         break
       case "unregisterGlobalProperties":
         unregisterGlobalProperties(properties: (call.arguments as? Array<String>), result: result)
         break
       case "record":
         let arguments = call.arguments as! Dictionary<String,Any>
-        record(eventName: (arguments["event"] as! String), properties: (arguments["properties"] as! AnalyticsProperties), result: result)
+        record(eventName: (arguments["event"] as! String), properties: (arguments["properties"] as AnyObject as! AnalyticsProperties), result: result)
         break
       default: result(FlutterMethodNotImplemented)
     }
