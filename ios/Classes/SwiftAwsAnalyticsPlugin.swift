@@ -34,9 +34,13 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     print("starting initialize")
     do {
         try Amplify.add(plugin: AWSCognitoAuthPlugin())
+        print("added auth")
         try Amplify.configure()
+        print("configured")
         try Amplify.add(plugin: AWSPinpointAnalyticsPlugin())
+        print("added analytics")
         try Amplify.configure()
+        print("configured")
         print("Amplify configured with Auth and Analytics plugins")
         result(true)
     } catch {
@@ -50,22 +54,11 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
                           "userPropertyIntKey": 123,
                           "userPropertyDoubleKey": 12.34,
                           "userPropertyBoolKey": true] as [String: AnalyticsPropertyValue]
-    do {
-    try Amplify.configure()
-  } catch {
-    print("Failed to initialize Amplify with \(error)")
-  }
     Amplify.Analytics.registerGlobalProperties(properties)
     result(true)
   }
 
   func unregisterGlobalProperties(properties: Array<String>?, result: FlutterResult) {
-    do {
-    try Amplify.configure()
-  } catch {
-    print("Failed to initialize Amplify with \(error)")
-  }
-
     if let properties = properties {
       let objectSet = Set(properties.map { $0 })
       Amplify.Analytics.unregisterGlobalProperties(objectSet)
@@ -81,11 +74,6 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
                           "userPropertyDoubleKey": 1.34,
                           "userPropertyBoolKey": true] as [String: AnalyticsPropertyValue]
     let event = BasicAnalyticsEvent(name: eventName, properties: properties)
-    do {
-    try Amplify.configure()
-  } catch {
-    print("Failed to initialize Amplify with \(error)")
-  }
 
     Amplify.Analytics.record(event: event)
     result(true)
