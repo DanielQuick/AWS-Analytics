@@ -48,13 +48,21 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
                           "userPropertyIntKey": 123,
                           "userPropertyDoubleKey": 12.34,
                           "userPropertyBoolKey": true] as [String: AnalyticsPropertyValue]
-    Amplify.configure()
+    do {
+    try Amplify.configure()
+  } catch {
+    print("Failed to initialize Amplify with \(error)")
+  }
     Amplify.Analytics.registerGlobalProperties(properties)
     result(true)
   }
 
   func unregisterGlobalProperties(properties: Array<String>?, result: FlutterResult) {
-        Amplify.configure()
+    do {
+    try Amplify.configure()
+  } catch {
+    print("Failed to initialize Amplify with \(error)")
+  }
 
     if let properties = properties {
       let objectSet = Set(properties.map { $0 })
@@ -71,7 +79,11 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
                           "userPropertyDoubleKey": 1.34,
                           "userPropertyBoolKey": true] as [String: AnalyticsPropertyValue]
     let event = BasicAnalyticsEvent(name: eventName, properties: properties)
-        Amplify.configure()
+    do {
+    try Amplify.configure()
+  } catch {
+    print("Failed to initialize Amplify with \(error)")
+  }
 
     Amplify.Analytics.record(event: event)
     result(true)
