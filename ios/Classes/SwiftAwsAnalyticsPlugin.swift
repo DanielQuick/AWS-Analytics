@@ -17,14 +17,14 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
         break
       case "registerGlobalProperties":
       let arguments = call.arguments as! Dictionary<String,Any>
-        registerGlobalProperties(properties: (arguments as! [String : AnalyticsPropertyValue]), result: result)
+        registerGlobalProperties(properties: arguments, result: result)
         break
       case "unregisterGlobalProperties":
         unregisterGlobalProperties(properties: (call.arguments as? Array<String>), result: result)
         break
       case "record":
         let arguments = call.arguments as! Dictionary<String,Any>
-        record(eventName: (arguments["event"] as! String), properties: (arguments["properties"] as! Dictionary<String,Any> as! [String : AnalyticsPropertyValue]), result: result)
+        record(eventName: (arguments["event"] as! String), properties: (arguments["properties"] as! Dictionary<String,Any>), result: result)
         break
       default: result(FlutterMethodNotImplemented)
     }
@@ -43,8 +43,19 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     }
   }
 
-  func registerGlobalProperties(properties: AnalyticsProperties, result: FlutterResult) {
-    Amplify.Analytics.registerGlobalProperties(properties)
+  func registerGlobalProperties(properties: Dictionary<String,Any>, result: FlutterResult) {
+
+    var globalProperties = ["userPropertyStringKey": "userProperyStringValue",
+                          "userPropertyIntKey": 123,
+                          "userPropertyDoubleKey": 12.34,
+                          "userPropertyBoolKey": true]
+
+    properties.removeAll()
+    for (key, value) in properties {
+      properties[key] = value
+    }
+
+    Amplify.Analytics.registerGlobalProperties(globalProperties as [String: AnalyticsPropertyValue])
     result(true)
   }
 
@@ -58,8 +69,15 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     result(true)
   }
 
-  func record(eventName: String, properties: AnalyticsProperties, result: FlutterResult) {
-    let event = BasicAnalyticsEvent(name: eventName, properties: properties)
+  func record(eventName: String, properties: Dictionary<String,Any>, result: FlutterResult) {
+
+    let properties = ["userPropertyStringKey": "userProperyStringValue",
+                          "userPropertyIntKey": 123,
+                          "userPropertyDoubleKey": 12.34,
+                          "userPropertyBoolKey": true]
+
+
+    let event = BasicAnalyticsEvent(name: eventName, properties: properties as [String: AnalyticsPropertyValue])
     Amplify.Analytics.record(event: event)
     result(true)
   }
