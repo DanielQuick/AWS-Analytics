@@ -34,6 +34,7 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
     print("starting initialize")
     do {
         try Amplify.add(plugin: AWSCognitoAuthPlugin())
+        try Amplify.configure()
         try Amplify.add(plugin: AWSPinpointAnalyticsPlugin())
         try Amplify.configure()
         print("Amplify configured with Auth and Analytics plugins")
