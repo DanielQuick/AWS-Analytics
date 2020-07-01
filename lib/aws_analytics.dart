@@ -3,20 +3,22 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class AwsAnalytics {
-  static const MethodChannel _channel =
-      const MethodChannel('aws_analytics');
+  static const MethodChannel _channel = const MethodChannel('aws_analytics');
 
-  static Future<bool> initialize() async {
+  static Future<void> initialize({Function(Error) onError}) async {
     try {
-      bool result = await _channel.invokeMethod("initialize");
-      return result;
+      await _channel.invokeMethod("initialize");
+      print("Successfully added Auth & Analytics Plugins");
     } catch (e) {
-      print(e);
-      return false;
+      if (onError != null)
+        onError(e);
+      else
+        print(e);
     }
   }
 
-  static Future<void> registerGlobalProperties(Map<String,dynamic> properties) async {
+  static Future<void> registerGlobalProperties(
+      Map<String, dynamic> properties) async {
     try {
       _channel.invokeMethod("registerGlobalProperties", properties);
     } catch (e) {
@@ -32,7 +34,8 @@ class AwsAnalytics {
     }
   }
 
-  static Future<void> record(String event, Map<String,dynamic> properties) async {
+  static Future<void> record(
+      String event, Map<String, dynamic> properties) async {
     try {
       _channel.invokeMethod("record", {
         'event': event,
