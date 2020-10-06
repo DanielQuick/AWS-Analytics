@@ -45,11 +45,21 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
   }
 
   func registerGlobalProperties(properties: [String:Any], result: FlutterResult) {
-    let properties = ["userPropertyStringKey": "userProperyStringValue",
-                          "userPropertyIntKey": 123,
-                          "userPropertyDoubleKey": 12.34,
-                          "userPropertyBoolKey": true] as [String: AnalyticsPropertyValue]
-    Amplify.Analytics.registerGlobalProperties(properties)
+    var globalProperties: [String:AnalyticsPropertyValue] = [:];
+    for (key, value) in properties {
+        if let value = value as? String {
+            globalProperties[key] = value
+        } else if let value = value as? Int {
+            globalProperties[key] = value
+        } else if let value = value as? Double {
+            globalProperties[key] = value
+        } else if let value = value as? Bool {
+            globalProperties[key] = value
+        } else {
+            print("No can do " + key);
+        }
+    }
+    Amplify.Analytics.registerGlobalProperties(globalProperties)
     result(true)
   }
 
@@ -64,11 +74,22 @@ public class SwiftAwsAnalyticsPlugin: NSObject, FlutterPlugin {
   }
 
   func record(eventName: String, properties: [String:Any], result: FlutterResult) {
-    let properties = ["userPropertyStringKey": "test",
-                          "userPropertyIntKey": 1,
-                          "userPropertyDoubleKey": 1.34,
-                          "userPropertyBoolKey": true] as [String: AnalyticsPropertyValue]
-    let event = BasicAnalyticsEvent(name: eventName, properties: properties)
+    var preparedProperties: [String:AnalyticsPropertyValue] = [:];
+
+    for (key, value) in properties {
+        if let value = value as? String {
+            preparedProperties[key] = value
+        } else if let value = value as? Int {
+            preparedProperties[key] = value
+        } else if let value = value as? Double {
+            preparedProperties[key] = value
+        } else if let value = value as? Bool {
+            preparedProperties[key] = value
+        } else {
+            print("No can do " + key);
+        }
+    }
+    let event = BasicAnalyticsEvent(name: eventName, properties: preparedProperties)
 
     Amplify.Analytics.record(event: event)
     result(true)
